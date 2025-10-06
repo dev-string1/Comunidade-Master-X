@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Comunidade Master-X - Sala Ao Vivo</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+body {
+  position: relative;
+  text-align:center;
+  color:#fff;
+  background: linear-gradient(270deg,#0f0f0f,#1a1a1a);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  overflow-x: hidden;
+}
+@keyframes gradientBG {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+body::before {
+  content:"";
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: url('fundo.jpg') center/cover no-repeat;
+  opacity:0.15; z-index:-2;
+}
+body::after {
+  content:"";
+  position: fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.4); z-index:-1;
+}
+header { padding: 60px 20px; }
+h1 { font-size: 3.5em; color:#00ffd5; text-shadow:0 0 10px #00ffd5,0 0 20px #00ffd5; }
+p.subtitle { font-size:1.5em; color:#ccc; margin-top:10px; }
+.section-title { font-size:2em; color:#00ffd5; text-shadow:0 0 10px #00ffd5; margin:40px 0 20px 0; }
+.section-text { font-size:1.2em; color:#ccc; margin-bottom:20px; max-width:800px; margin-left:auto; margin-right:auto; }
+.photo-row, .video-row { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; margin: 20px 0 40px 0; }
+.media-item {
+  position: relative; width: 200px; height: 120px; border-radius: 15px;
+  overflow: hidden; box-shadow: 0 0 30px #00ffd5; cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s, opacity 0.6s ease, transform 0.6s ease;
+  opacity:0; transform: translateY(30px) scale(0.95) rotate(0deg);
+}
+.media-item img, .media-item video { width:100%; height:100%; object-fit:cover; display:block; }
+.media-item:hover { transform: translateY(-5px) scale(1.05) rotate(-1deg); box-shadow:0 0 60px #00ffd5; }
+.overlay { position: absolute; bottom: 0; background: rgba(0,0,0,0.7); color:#00ffd5; width: 100%; text-align:center; padding:10px; font-size:1em; opacity:0; transition: opacity 0.5s ease; pointer-events: none; }
+@media (hover: hover) and (pointer: fine) { .media-item:hover .overlay { opacity:1; } }
+.media-item.active .overlay { opacity:1; }
+.cta-section { background: rgba(0,0,0,0.6); padding:40px 20px; border-radius:20px; margin:40px auto; max-width:500px; box-shadow:0 0 40px #00ffd5; position:relative; }
+.cta-section h2 { font-size:2.2em; color:#00ffd5; margin-bottom:20px; text-shadow:0 0 10px #00ffd5; }
+.cta-section p { font-size:1.2em; color:#ccc; margin-bottom:30px; }
+button.action-btn { padding:20px 40px; font-size:1.2em; border:none; border-radius:15px; margin:10px; cursor:pointer; color:#0f0f0f; box-shadow:0 0 20px #00ffd5; transition:all 0.3s ease; animation: pulseBtn 2s infinite; }
+button.action-btn:hover { transform: scale(1.1); box-shadow:0 0 60px #00ffd5; }
+@keyframes pulseBtn { 0%,100%{box-shadow:0 0 20px #00ffd5;}50%{box-shadow:0 0 50px #00ffd5;} }
+footer { padding:30px; font-size:0.9em; color:#888; border-top:1px solid #222; }
+@media (max-width:600px){ .media-item{width:45%; height:auto;} .photo-row, .video-row{gap:10px;} }
+@media (max-width:400px){ .media-item{width:90%;} }
+.in-view { opacity:1 !important; transform: translateY(0) scale(1) rotate(0deg) !important; }
+#particles { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-3; pointer-events:none; }
+.highlight-text { margin-top:20px; max-width:900px; margin-left:auto; margin-right:auto; padding:20px; background: rgba(0,0,0,0.6); border-radius:15px; box-shadow:0 0 30px #00ffd5; color:#FFD700; font-size:1.2em; text-align:center; }
+.topics ul li { margin-bottom:10px; }
+.price { font-size: 2.5em; color: #FFD700; font-weight: bold; border: 2px solid #FFD700; border-radius: 15px; padding: 10px 20px; display: block; margin: 20px auto; animation: floatPrice 2s ease-in-out infinite; }
+@keyframes floatPrice { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.arrow-down { font-size: 2em; color: #FFFF00; display:block; margin: 0 auto 10px auto; animation: floatArrow 2s ease-in-out infinite; }
+@keyframes floatArrow { 0%,100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
+input, input:focus { outline:none; }
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<header>
+<h1>Comunidade Master-X 💰</h1>
+<p class="subtitle">Acesso exclusivo à minha sala ao vivo — pela primeira vez, compartilho meu conhecimento 100% na prática. Não perca esta oportunidade única!</p>
+</header>
+
+<div class="topics">
+  <h2 style="text-align:center; margin-bottom:15px; color:#00ffd5; text-shadow:0 0 10px #00ffd5;">📌 O que terá na sala ao vivo:</h2>
+  <ul style="list-style:none; padding:20px; background: rgba(0,0,0,0.6); border-radius:15px; box-shadow:0 0 30px #00ffd5; max-width:800px; margin:0 auto 20px auto; font-size:1.1em; color:#00ffd5; text-align:left; line-height:1.8em;">
+    <li>🟢 Você irá aprender todo o meu operacional e minhas estratégias</li>
+    <li>🟢 Acompanhamento durante a sessão</li>
+    <li>🟢 Poderá tirar suas dúvidas durante a sessão</li>
+    <li>🟢 Gestão de banca</li>
+    <li>🟢 Ajuda para quem quiser passar em mesas proprietárias</li>
+  </ul>
+</div>
+
+<div class="section-title">Resultado e fruto de muito trabalho</div>
+<div class="section-text">Veja meus resultados reais: Aprovação em mesa proprietária utilizando apenas minha ferramenta e minhas estratégias operacionais.</div>
+
+<div class="photo-row">
+  <div class="media-item"><img src="imagem2.jpg"><div class="overlay">Certificado 50K</div></div>
+  <div class="media-item"><img src="imagem3.jpg"><div class="overlay">Certificado 50K</div></div>
+</div>
+
+<div class="section-title">Veja os Vídeos</div>
+<div class="section-text">Assista aos vídeos exclusivos: tutoriais detalhados, análises precisas e demonstrações das estratégias vencedoras.</div>
+
+<div class="video-row">
+  <div class="media-item"><video autoplay loop playsinline muted controls><source src="video1.mp4" type="video/mp4"></video><div class="overlay">Infinity Money</div></div>
+  <div class="media-item"><video autoplay loop playsinline muted controls><source src="video4.mp4" type="video/mp4"></video><div class="overlay">Infinity Money</div></div>
+  <div class="media-item"><video autoplay loop playsinline muted controls><source src="video2.mp4" type="video/mp4"></video><div class="overlay">Operação mesa de forex</div></div>
+  <div class="media-item"><video autoplay loop playsinline muted controls><source src="video3.mp4" type="video/mp4"></video><div class="overlay">Operação forex conta particular</div></div>
+</div>
+
+<div class="highlight-text">
+Todas as entradas serão analisadas no TradingView e baseadas nas minhas estratégias, tanto pela ferramenta quanto pela análise técnica alinhada com <strong style="color:#39FF14;">Wyckoff, SMC e Elliott</strong>.
+</div>
+
+<div style="margin:40px auto; text-align:center; max-width:300px;">
+  <video autoplay loop playsinline muted controls style="width:300px; border-radius:15px; box-shadow:0 0 30px #00ffd5;">
+    <source src="video_central.mp4" type="video/mp4">
+    Seu navegador não suporta vídeo.
+  </video>
+</div>
+
+<div class="cta-section">
+<h2>💳 Garantir Acesso</h2>
+<p>Após efetuar o pagamento e receber a sua senha, você terá acesso imediato aos arquivos e aulas para instalar a ferramenta e acompanhar a sala ao vivo.</p>
+<div class="price">R$497,00</div>
+<button class="action-btn" id="btnPagamento" style="background:linear-gradient(45deg,#00ff44,#00aa22);">Efetuar Pagamento</button>
+
+<div id="pagamentoOpcoes" style="display:none; margin-top:20px;">
+  <div style="background: rgba(0,0,0,0.6); padding:20px; border-radius:15px; box-shadow:0 0 20px #00ffd5; max-width:300px; margin:0 auto 15px auto; text-align:center;">
+    <h3 style="color:#00ffd5; margin-bottom:10px;">QR Code PIX (Cobrador)</h3>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=00020126330014br.gov.bcb.pix0111025452282305204000053039865406497.005802BR5925WEVERTON%20DE%20SOUZA%20PEREIRA6006ITAJAI62580520SAN2025090116453605450300017br.gov.bcb.brcode01051.0.06304AD60" 
+         alt="QR PIX Cobrador" style="width:140px; height:140px; display:block; margin:0 auto; border-radius:10px;">
+    <h3 style="color:#00ffd5; margin:15px 0 10px 0;">Chave aleatória</h3>
+    <p style="color:#FFD700; font-weight:bold; font-size:1.05em; word-break: break-all;">
+      93fd6020-2203-4f5e-ada6-174a6e472dcc
+    </p>
+    <button class="action-btn" id="copiarChave" style="margin-top:10px; background:linear-gradient(45deg,#00ff44,#00aa22);">Copiar Chave</button>
+
+    <a href="https://wa.me/5568999504688?text=Ol%C3%A1.%20fiz%20o%20pagamento%20da%20sala%20ao%20vivo%21" target="_blank" style="display:block; margin-top:15px;">
+      <button class="action-btn" style="background:linear-gradient(45deg,#00ff44,#00aa22);">✅ Enviar Comprovante via WhatsApp para obter a senha de acesso</button>
+    </a>
+
+    <div id="campoSenha" style="display:block; margin-top:20px;">
+      <input type="text" id="senhaUsuario" placeholder="Digite a senha" style="width:100%; padding:10px; border-radius:10px; border:none; margin-bottom:10px;">
+      <button class="action-btn" id="verificarSenha" style="background:linear-gradient(45deg,#00ff44,#00aa22);">Verificar Senha</button>
+      <p id="msgSenha" style="margin-top:10px; display:none;"></p>
+    </div>
+
+    <div id="linksLiberados" style="display:none; margin-top:15px; text-align:center;">
+      <!-- Link único do Google Drive -->
+      <a href="https://drive.google.com/drive/folders/1oThE1h3LBQNlRHddbN_3hVFbeykdfzPY?usp=drive_link" 
+         target="_blank" class="action-btn" 
+         style="background:linear-gradient(45deg,#00ff44,#00aa22); color:#fff; display:block; margin:10px auto;">
+        📂 Acessar os arquivos (Google Drive)
+      </a>
+
+      <!-- Restante -->
+      <a href="LINK_INSTALACAO_FERRAMENTA" target="_blank" class="action-btn" 
+         style="background:linear-gradient(45deg,#00ff44,#00aa22); color:#fff; display:block; margin:10px auto;">
+        🛠️ Instalação da ferramenta
+      </a>
+      <a href="https://t.me/+bGDis-PFbwg1MzY5" target="_blank" class="action-btn" style="background:linear-gradient(45deg,#00ff44,#00aa22); color:#fff; display:block; margin:10px auto;">
+        💰 Acesso ao grupo VIP
+      </a>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer>
+&copy; 2025 Comunidade Master-X. Todos os direitos reservados.
+</footer>
+
+<script>
+// Overlay mobile
+const mediaItems = document.querySelectorAll('.media-item');
+mediaItems.forEach(item=>{
+  item.addEventListener('click', ()=>{
+    mediaItems.forEach(i=>i.classList.remove('active'));
+    item.classList.add('active');
+    setTimeout(()=>{item.classList.remove('active');},3000);
+  });
+});
+
+// Scroll animation
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){ entry.target.classList.add('in-view'); }
+  });
+}, {threshold:0.1});
+document.querySelectorAll('.media-item').forEach(item=>observer.observe(item));
+
+// Particles
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+let W=canvas.width=window.innerWidth,H=canvas.height=window.innerHeight;
+const particlesArray=[];
+for(let i=0;i<100;i++){
+  particlesArray.push({x:Math.random()*W,y:Math.random()*H,dx:(Math.random()-0.5)*0.5,dy:(Math.random()-0.5)*0.5,r:Math.random()*2+1});
+}
+function animateParticles(){
+  ctx.clearRect(0,0,W,H);
+  particlesArray.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle='#00ffd5';
+    ctx.fill();
+    p.x+=p.dx; p.y+=p.dy;
+    if(p.x<0||p.x>W)p.dx*=-1;
+    if(p.y<0||p.y>H)p.dy*=-1;
+  });
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+window.addEventListener('resize',()=>{ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; });
+
+// Mostrar/ocultar opções de pagamento (PIX)
+document.getElementById('btnPagamento').addEventListener('click', function(){
+  const opcoes = document.getElementById('pagamentoOpcoes');
+  if(opcoes.style.display === 'none'){
+    opcoes.style.display = 'block';
+    opcoes.scrollIntoView({behavior: 'smooth'});
+  } else {
+    opcoes.style.display = 'none';
+  }
+});
+
+// Copiar chave PIX
+document.getElementById('copiarChave').addEventListener('click', function(){
+  const chave = '93fd6020-2203-4f5e-ada6-174a6e472dcc';
+  navigator.clipboard.writeText(chave).then(()=>{ alert("Chave copiada!"); });
+});
+
+// Senhas válidas
+const senhasValidas = ["JM2025","VIP001","XY7P9A"]; 
+document.getElementById('verificarSenha').addEventListener('click', function(){
+  const senhaDigitada = document.getElementById('senhaUsuario').value.trim();
+  const msg = document.getElementById('msgSenha');
+  const links = document.getElementById('linksLiberados');
+
+  if(senhasValidas.includes(senhaDigitada)){
+    msg.style.display = 'inline';
+    msg.style.color = '#00FF00';
+    msg.textContent = "✅ Senha correta! Acesso liberado.";
+    links.style.display = 'block';
+    links.scrollIntoView({behavior:'smooth'});
+  } else {
+    msg.style.display = 'inline';
+    msg.style.color = 'red';
+    msg.textContent = "❌ Senha incorreta. Tente novamente.";
+    links.style.display = 'none';
+  }
+});
+</script>
+</body>
+</html>
+
+
+
+
+
